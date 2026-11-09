@@ -1,0 +1,5 @@
+snowflake-connector-python
+snowflake-cli
+streamlit
+pandas
+requests
