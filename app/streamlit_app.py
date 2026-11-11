@@ -1,37 +1,53 @@
 """Chokepoint Monitor: Streamlit app on top of the GOLD layer.
 
+Reads from Snowflake (the local emulator) when it's reachable, otherwise from the
+snapshot in data/gold/ (written by scripts/export_snapshot.py).
+
+Force a source with DATA_SOURCE=snowflake or DATA_SOURCE=snapshot.
+
 Usage:
     streamlit run app/streamlit_app.py
 """
+import os
+from pathlib import Path
+
 import pandas as pd
-import snowflake.connector
 import streamlit as st
 
 st.set_page_config(page_title="Chokepoint Monitor", page_icon="🚢", layout="wide")
 
 STATUS_ICON = {"DISRUPTED": "🔴 DISRUPTED", "SURGE": "🟠 SURGE", "NORMAL": "⚪️ NORMAL"}
+SNAPSHOT_DIR = Path(__file__).resolve().parents[1] / "data" / "gold"
+DATA_SOURCE = os.getenv("DATA_SOURCE", "auto")  # auto | snowflake | snapshot
 
 
 @st.cache_resource
 def get_conn():
-    return snowflake.connector.connect(
-        user="test",
-        password="test",
-        account="test",
-        host="snowflake.localhost.localstack.cloud",
-        port=4566,
-        protocol="https",
-        warehouse="COMPUTE_WH",
-        database="SUPPLY_CHAIN",
-        schema="GOLD",
-    )
+    """Snowflake connection, or None when the app should read the snapshot."""
+    if DATA_SOURCE == "snapshot":
+        return None
+    try:
+        import snowflake.connector
+
+        return snowflake.connector.connect(
+            user="test",
+            password="test",
+            account="test",
+            host="snowflake.localhost.localstack.cloud",
+            port=4566,
+            protocol="https",
+            warehouse="COMPUTE_WH",
+            database="SUPPLY_CHAIN",
+            schema="GOLD",
+            login_timeout=5,
+        )
+    except Exception:
+        if DATA_SOURCE == "snowflake":
+            raise
+        return None
 
 
-@st.cache_data(ttl=600)
-def query(sql: str) -> pd.DataFrame:
-    cur = get_conn().cursor()
-    cur.execute(sql)
-    df = pd.DataFrame(cur.fetchall(), columns=[d[0].lower() for d in cur.description])
+def to_numeric(df: pd.DataFrame) -> pd.DataFrame:
     # Snowflake NUMBER arrives as Decimal; convert numeric columns, leave text and dates
     for col in df.columns:
         if df[col].dtype == "object":
@@ -41,20 +57,28 @@ def query(sql: str) -> pd.DataFrame:
     return df
 
 
-monitor = query("SELECT * FROM DISRUPTION_MONITOR ORDER BY change_pct")
-rerouting = query("SELECT * FROM RED_SEA_REROUTING ORDER BY month")
-weekly = query(
-    "SELECT week_start, chokepoint_name, transits_total, transits_total_ly, yoy_pct "
-    "FROM CHOKEPOINT_WEEKLY ORDER BY week_start"
-)
+@st.cache_data(ttl=600)
+def load(table: str, order_by: str) -> pd.DataFrame:
+    conn = get_conn()
+    if conn is None:
+        return pd.read_csv(SNAPSHOT_DIR / f"{table}.csv").sort_values(order_by, ignore_index=True)
+    cur = conn.cursor().execute(f"select * from {table} order by {order_by}")
+    df = pd.DataFrame(cur.fetchall(), columns=[d[0].lower() for d in cur.description])
+    return to_numeric(df)
+
+
+monitor = load("disruption_monitor", "change_pct")
+rerouting = load("red_sea_rerouting", "month")
+weekly = load("chokepoint_weekly", "week_start")
 
 as_of = pd.to_datetime(monitor["as_of_date"].iloc[0]).date() if not monitor.empty else "n/a"
+source = "live from Snowflake" if get_conn() is not None else "snapshot of the gold layer"
 
 # ---------------------------------------------------------------- header
 st.title("🚢 Global Chokepoint Monitor")
 st.caption(
     f"Daily shipment transits through {len(monitor)} global maritime chokepoints // "
-    f"data as of {as_of} // source: IMF PortWatch"
+    f"data as of {as_of} // source: IMF PortWatch // {source}"
 )
 
 # ---------------------------------------------------------------- KPIs
@@ -63,11 +87,11 @@ c1, c2, c3 = st.columns(3)
 if not ranked.empty:
     drop, surge = ranked.iloc[0], ranked.iloc[-1]
     c1.metric("% YoY Largest drop", drop["chokepoint_name"], f"{drop['change_pct']:.1f}% ships",
-              help="Year over year data: current period compared to the same one last year.", delta_color = "blue")
+              help="Year over year data: current period compared to the same one last year.", delta_color="blue")
     c2.metric("% YoY Largest increase", surge["chokepoint_name"], f"{surge['change_pct']:.1f}% ships",
-              help="Year over year data: current period compared to the same one last year.", delta_color = "blue")
-c3.metric("Disrupted chokepoints", f"# {int((monitor["status"] == "DISRUPTED").sum())}",
-          help="Currently disrupted chockepoints in the database.")
+              help="Year over year data: current period compared to the same one last year.", delta_color="blue")
+c3.metric("Disrupted chokepoints", f"# {int((monitor['status'] == 'DISRUPTED').sum())}",
+          help="Currently disrupted chokepoints in the database.")
 
 st.divider()
 
@@ -79,7 +103,7 @@ table["status"] = table["status"].map(STATUS_ICON)
 st.dataframe(
     table,
     hide_index=True,
-    use_container_width=True,
+    width="stretch",
     column_config={
         "chokepoint_name": "Chokepoint",
         "avg_daily_last_30d": st.column_config.NumberColumn("# Transit/day, last 30d", format="%.1f"),
@@ -125,7 +149,7 @@ if not sel.empty:
     m1, m2 = st.columns(2)
     m1.metric("Transits, last full week", int(last["transits_total"]))
     if pd.notna(last["yoy_pct"]):
-        m2.metric("Change compared compared to last year", f"{last['yoy_pct']:.1f}%")
+        m2.metric("Change compared to last year", f"{last['yoy_pct']:.1f}%")
     st.line_chart(
         sel.set_index("week_start")[["transits_total", "transits_total_ly"]].rename(
             columns={"transits_total": "This year", "transits_total_ly": "Same week last year"}

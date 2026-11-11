@@ -35,6 +35,12 @@ What that means in practice:
 - The emulator is built for testing, not speed, and has quirks.
 - No Snowsight UI, Marketplace or Cortex. The app is Streamlit running locally, and the deployed demo reads a snapshot of the gold layer.
 
+
+> [!IMPORTANT]
+> **Try it yourself:** Open the Streamlit deployment and interact with the app live. - [LIVE DEMO: chokepoint-monitor.streamlit.app](https://chokepoint-monitor.streamlit.app/).
+> (reads a snapshot, data as of 2026-11-08)
+
+
 ## Demo
 
 
@@ -43,9 +49,6 @@ What that means in practice:
 ---
 
 ![Pipeline run](assets/pipeline-run.png)
-
-**Live demo:** <!-- add the Streamlit Community Cloud link after deploying --> _coming soon_
-(reads a snapshot, data as of 2026-11-08)
 
 ## How I built it
 
