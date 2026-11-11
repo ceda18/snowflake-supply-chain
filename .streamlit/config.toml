@@ -1,0 +1,15 @@
+[theme]
+base = "dark"
+font = "Poppins:https://googleapis.com"
+
+primaryColor = "#B9E4E8"
+backgroundColor = "#071B2B"
+secondaryBackgroundColor = "#167D8D"
+textColor = "#EEEEEE"
+
+baseRadius = "0.5rem"
+showWidgetBorder = true
+borderColor = "#1E293B"
+
+[client]
+#toolbarMode = "minimal"

@@ -1,0 +1,29 @@
+chokepoint_id,chokepoint_name,as_of_date,avg_daily_last_30d,avg_daily_same_30d_ly,change_pct,status
+chokepoint1,Suez Canal,2026-11-08,43.2,41.9,3.1,NORMAL
+chokepoint10,Oresund Strait,2026-11-08,41.6,47.5,-12.4,NORMAL
+chokepoint11,Taiwan Strait,2026-11-08,224.3,214.0,4.8,NORMAL
+chokepoint12,Korea Strait,2026-11-08,202.1,219.3,-7.8,NORMAL
+chokepoint13,Tsugaru Strait,2026-11-08,40.4,42.3,-4.5,NORMAL
+chokepoint14,Luzon Strait,2026-11-08,94.5,73.2,29.1,SURGE
+chokepoint15,Lombok Strait,2026-11-08,38.0,36.7,3.5,NORMAL
+chokepoint16,Ombai Strait,2026-11-08,7.5,10.7,-29.9,DISRUPTED
+chokepoint17,Bohai Strait,2026-11-08,155.1,176.1,-11.9,NORMAL
+chokepoint18,Torres Strait,2026-11-08,8.4,10.1,-16.8,NORMAL
+chokepoint19,Sunda Strait,2026-11-08,31.8,29.0,9.7,NORMAL
+chokepoint2,Panama Canal,2026-11-08,27.8,31.9,-12.9,NORMAL
+chokepoint20,Makassar Strait,2026-11-08,53.5,49.3,8.5,NORMAL
+chokepoint21,Magellan Strait,2026-11-08,3.9,3.5,11.4,NORMAL
+chokepoint22,Yucatan Channel,2026-11-08,51.4,49.5,3.8,NORMAL
+chokepoint23,Windward Passage,2026-11-08,14.7,13.9,5.8,NORMAL
+chokepoint24,Mona Passage,2026-11-08,11.3,12.8,-11.7,NORMAL
+chokepoint25,Balabac Strait,2026-11-08,11.9,9.6,24.0,NORMAL
+chokepoint26,Bering Strait,2026-11-08,2.3,2.1,9.5,NORMAL
+chokepoint27,Mindoro Strait,2026-11-08,52.6,31.1,69.1,SURGE
+chokepoint28,Kerch Strait,2026-11-08,0.1,22.0,-99.5,DISRUPTED
+chokepoint3,Bosporus Strait,2026-11-08,48.0,99.3,-51.7,DISRUPTED
+chokepoint4,Bab el-Mandeb Strait,2026-11-08,27.2,36.8,-26.1,DISRUPTED
+chokepoint5,Malacca Strait,2026-11-08,220.9,241.6,-8.6,NORMAL
+chokepoint6,Strait of Hormuz,2026-11-08,3.8,83.7,-95.5,DISRUPTED
+chokepoint7,Cape of Good Hope,2026-11-08,85.2,90.2,-5.5,NORMAL
+chokepoint8,Gibraltar Strait,2026-11-08,127.3,132.8,-4.1,NORMAL
+chokepoint9,Dover Strait,2026-11-08,166.8,174.7,-4.5,NORMAL

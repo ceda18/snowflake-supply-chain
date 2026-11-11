@@ -1,0 +1,28 @@
+[sqlfluff]
+dialect = snowflake
+templater = placeholder
+max_line_length = 120
+# AM04: select * in the checks is intentional, ST06: column order follows the source
+exclude_rules = AM04, ST06
+
+[sqlfluff:templater:placeholder]
+param_regex = <% (?P<param_name>[\w:.*]+) %>
+data_dir = /data/raw
+
+[sqlfluff:indentation]
+tab_space_size = 4
+
+[sqlfluff:rules:capitalisation.keywords]
+capitalisation_policy = lower
+
+[sqlfluff:rules:capitalisation.identifiers]
+extended_capitalisation_policy = lower
+
+[sqlfluff:rules:capitalisation.functions]
+extended_capitalisation_policy = lower
+
+[sqlfluff:rules:capitalisation.literals]
+capitalisation_policy = lower
+
+[sqlfluff:rules:capitalisation.types]
+extended_capitalisation_policy = lower

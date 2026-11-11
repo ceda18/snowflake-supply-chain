@@ -5,4 +5,4 @@ services:
     ports:
       - "127.0.0.1:4566:4566"
     environment:
-      - LOCALSTACK_AUTH_TOKEN=${LOCALSTACK_AUTH_TOKEN:?Set up in .env file}
+      - LOCALSTACK_AUTH_TOKEN=${LOCALSTACK_AUTH_TOKEN:?Set up in .env}
