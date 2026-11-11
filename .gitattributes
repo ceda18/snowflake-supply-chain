@@ -1,0 +1,2 @@
+*.sql linguist-detectable=true
+data/** linguist-generated=true
