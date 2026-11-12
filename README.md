@@ -1,6 +1,6 @@
 # 🚢 Chokepoint Monitor
 
-**A one-day Snowflake project: a bronze / silver / gold pipeline that turns daily ship-tracking data
+**A Snowflake project: a bronze / silver / gold pipeline that turns daily ship-tracking data
 from IMF PortWatch into an early-warning view of disruptions at the world's 28 maritime chokepoints.**
 
 ![Snowflake](https://img.shields.io/badge/Snowflake_SQL-29B5E8?logo=snowflake&logoColor=white)
@@ -23,7 +23,7 @@ ship), voyages get longer, capacity gets tight and prices get higher.
 30 days with the same period last year, and flags anything that dropped or jumped by 25% or more.
 A small Streamlit app makes everything go live.
 
-**Why it's interesting.** It's a Snowflake workflow on real, free, daily-updated data. I also see a real business use case, because you can make decisions and automations to customers who might face problems on their shipment based on problems in the global logistical chokepoints. 
+**Why it's interesting.** It's a Snowflake workflow on real, free, daily data, published weekly. I also see a real business use case, because you can make decisions and automations to customers who might face problems on their shipment based on problems in the global logistical chokepoints. 
 
 ## Not quite Snowflake
 
@@ -37,7 +37,7 @@ What that means in practice:
 
 
 > [!IMPORTANT]
-> **Try it yourself:** Open the Streamlit deployment and interact with the app live. - [LIVE DEMO: chokepoint-monitor.streamlit.app](https://chokepoint-monitor.streamlit.app/).
+> **Try it yourself:** Open the Streamlit deployment and interact with the app live. [LIVE DEMO: chokepoint-monitor.streamlit.app](https://chokepoint-monitor.streamlit.app/).
 > (reads a snapshot, data as of 2026-11-08)
 
 
@@ -54,7 +54,7 @@ What that means in practice:
 
 With AI-assisted coding (Claude) as a pair programmer, which is how I like to work on a new stack.
 My part: picking the problem and the data source, deciding the scope, running everything against
-the emulator, diagnosing the four issues above and deciding how to fix each, and checking the
+the emulator, diagnosing the issues found and deciding how to fix each, and checking the
 results. The SQL is linted with [SQLFluff](https://sqlfluff.com/) (Snowflake dialect) on every push.
 
 ## What the app shows, and why
@@ -117,7 +117,7 @@ three years, so a flat year-over-year number isn't a recovery; the comparison th
 against the 2023 baseline.
 
 **Why this makes business sense.** For a logistics company, a chokepoint disruption turns into longer
-transit times, lower capacity and rate changes on specific routes, usually within weeks. The data
+transit times, lower capacity and rate changes on specific routes, usually within weeks. The daily data
 here is free, public and updated weekly, and the whole pipeline costs next to nothing to run. That
 would make it a cheap early-warning layer. Commercial teams can warn affected customers before they ask,
 re-quote with realistic transit times, and offer alternatives.
